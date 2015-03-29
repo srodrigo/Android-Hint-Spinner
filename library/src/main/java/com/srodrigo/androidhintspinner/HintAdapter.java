@@ -13,6 +13,7 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -22,32 +23,51 @@ import java.util.List;
 public abstract class HintAdapter extends ArrayAdapter {
 	private static final String TAG = HintAdapter.class.getSimpleName();
 
-	private boolean hintEnabled;
+	private boolean hintAdded;
 	private String hintResource;
 
-	public HintAdapter(Context context, int hintResource, List objects) {
-		this(context, context.getString(hintResource), objects);
+	public HintAdapter(Context context, int hintResource, List data) {
+		this(context, context.getString(hintResource), data);
 	}
 
-	public HintAdapter(Context context, String hintResource, List objects) {
-		this(context, android.R.layout.simple_spinner_dropdown_item, hintResource, objects);
+	public HintAdapter(Context context, String hintResource, List data) {
+		this(context, android.R.layout.simple_spinner_dropdown_item, hintResource, data);
 	}
 
-	protected HintAdapter(Context context, int layoutResource, String hintResource, List objects) {
-		super(context, layoutResource, objects);
+	protected HintAdapter(Context context, int layoutResource, String hintResource, List data) {
+		// Create a copy, as we need to be able to add the hint without modifying the array passed in
+		// or crashing when the user sets an unmodifiable.
+		super(context, layoutResource, new ArrayList(data));
 		this.hintResource = hintResource;
 	}
 
-	public void addHint() {
-		// Prevent adding the hint more than once
-		if (!isHintEnabled()) {
-			addHintObject();
-			hintEnabled = true;
+	/**
+	 * This needs to be called to update the adapter data.
+	 *
+	 * @param data List of elements
+	 */
+	public void updateData(List data) {
+		clear();
+		hintAdded = false;
+		if (data != null) {
+			addAll(data);
+			// Every time we update the adapter data, the hint gets removed, so  we need to add it
+			// again.
+			addHint();
 		}
+		notifyDataSetChanged();
 	}
 
-	private void addHintObject() {
-		add(new Object());
+	/**
+	 * Adds the hint element.
+	 */
+	public void addHint() {
+		// Prevent adding the hint more than once
+		if (!hintAdded) {
+			Log.d(TAG, "Adding hint object");
+			add(new Object());
+			hintAdded = true;
+		}
 	}
 
 	@Override
@@ -57,6 +77,12 @@ public abstract class HintAdapter extends ArrayAdapter {
 		return dropDownView;
 	}
 
+	/**
+	 * Hook method to set a custom text value.
+	 *
+	 * @param position Position selected
+	 * @param dropDownView Text View
+	 */
 	protected abstract void setDropDownViewText(int position, TextView dropDownView);
 
 	@Override
@@ -72,33 +98,26 @@ public abstract class HintAdapter extends ArrayAdapter {
 		return view;
 	}
 
+	/**
+	 * Returns the elements count without the hint element.
+	 *
+	 * @return
+	 */
 	@Override
 	public int getCount() {
 		int count = super.getCount();
-		if (hintEnabled) {
+		if (hintAdded) {
 			return count > 0 ? count - 1 : count;
 		} else {
 			return count;
 		}
 	}
 
-	// This is the funny method. Every time we update the adapter data, the hint gets removed, so
-	// we need to add it again
-	public void updateData(List data) {
-		clear();
-		if (data != null) {
-			addAll(data);
-			if (isHintEnabled()) {
-				addHintObject();
-			}
-		}
-		notifyDataSetChanged();
-	}
-
-	public boolean isHintEnabled() {
-		return hintEnabled;
-	}
-
+	/**
+	 * Gets the position of the hint element. The hint gets added at the end of the list.
+	 *
+	 * @return Position of the hint element
+	 */
 	public int getHintPosition() {
 		return getCount();
 	}

@@ -13,12 +13,30 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Spinner;
 
+import java.util.List;
+
 /**
  * Provides methods to work with a hint element. The method setCallback must be called to manage
  * the On Item Selected events.
  */
 public class HintSpinner<T> extends Spinner {
 	private static final String TAG = HintSpinner.class.getSimpleName();
+
+	/**
+	 * Used to handle the spinner events.
+	 *
+	 * @param <T> Type of the data used by the spinner
+	 */
+	public interface Callback<T> {
+		/**
+		 * When a spinner item has been selected.
+		 *
+		 * @param position Position selected
+		 * @param itemAtPosition Item selected
+		 */
+		void onItemSelected(int position, T itemAtPosition);
+	}
+
 	private HintAdapter adapter;
 	private Callback<T> callback;
 
@@ -26,6 +44,13 @@ public class HintSpinner<T> extends Spinner {
 		super(context, attrs);
 	}
 
+	/**
+	 * Initializes the spinner.
+	 *
+	 * By default, the hint is selected when calling this method.
+	 *
+	 * @param adapter
+	 */
 	public void initAdapter(HintAdapter adapter) {
 		this.adapter = adapter;
 		setAdapter(adapter);
@@ -50,20 +75,29 @@ public class HintSpinner<T> extends Spinner {
 	}
 
 	private boolean isHintPosition(int position) {
-		return adapter.isHintEnabled() && position == adapter.getHintPosition();
+		return position == adapter.getHintPosition();
 	}
 
+	/**
+	 * Selects the hint element.
+	 */
 	public void selectHint() {
 		adapter.addHint();
 		setSelection(adapter.getHintPosition());
 	}
 
-	public void setCallback(Callback<T> callback) {
-		this.callback = callback;
+	/**
+	 * Updates the spinner data with the data provided.
+	 *
+	 * @param newData Data used to update the spinner
+	 */
+	public void updateData(List<T> newData) {
+		adapter.updateData(newData);
+		setAdapter(adapter);
 	}
 
-	public interface Callback<T> {
-		void onItemSelected(int position, T itemAtPosition);
+	public void setCallback(Callback<T> callback) {
+		this.callback = callback;
 	}
 }
 
