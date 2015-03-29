@@ -20,23 +20,23 @@ import java.util.List;
  * the last object. Otherwise, it will show the dropdown view implemented by the concrete class.
  */
 public abstract class HintAdapter extends ArrayAdapter {
-    private static final String TAG = HintAdapter.class.getSimpleName();
+	private static final String TAG = HintAdapter.class.getSimpleName();
 
-    private boolean hintEnabled;
+	private boolean hintEnabled;
 	private String hintResource;
 
 	public HintAdapter(Context context, int hintResource, List objects) {
 		this(context, context.getString(hintResource), objects);
 	}
 
-    public HintAdapter(Context context, String hintResource, List objects) {
-        this(context, android.R.layout.simple_spinner_dropdown_item, hintResource, objects);
-    }
+	public HintAdapter(Context context, String hintResource, List objects) {
+		this(context, android.R.layout.simple_spinner_dropdown_item, hintResource, objects);
+	}
 
-    protected HintAdapter(Context context, int layoutResource, String hintResource, List objects) {
-        super(context, layoutResource, objects);
-        this.hintResource = hintResource;
-    }
+	protected HintAdapter(Context context, int layoutResource, String hintResource, List objects) {
+		super(context, layoutResource, objects);
+		this.hintResource = hintResource;
+	}
 
 	public void addHint() {
 		// Prevent adding the hint more than once
@@ -51,29 +51,29 @@ public abstract class HintAdapter extends ArrayAdapter {
 	}
 
 	@Override
-    public View getDropDownView(int position, View convertView, ViewGroup parent) {
-        final TextView dropDownView = (TextView) super.getDropDownView(position, convertView, parent);
-        setDropDownViewText(position, dropDownView);
-        return dropDownView;
-    }
+	public View getDropDownView(int position, View convertView, ViewGroup parent) {
+		final TextView dropDownView = (TextView) super.getDropDownView(position, convertView, parent);
+		setDropDownViewText(position, dropDownView);
+		return dropDownView;
+	}
 
-    protected abstract void setDropDownViewText(int position, TextView dropDownView);
-
-    @Override
-    public View getView(int position, View convertView, ViewGroup parent) {
-        Log.d(TAG, "position: " + position + ", getCount: " + getCount());
-        final TextView view = (TextView) super.getView(position, convertView, parent);
-        if (position == getCount()) {
-            ((TextView)view.findViewById(android.R.id.text1)).setText("");
-            ((TextView)view.findViewById(android.R.id.text1)).setHint(hintResource);
-        } else {
-            setDropDownViewText(position, view);
-        }
-        return view;
-    }
+	protected abstract void setDropDownViewText(int position, TextView dropDownView);
 
 	@Override
-     public int getCount() {
+	public View getView(int position, View convertView, ViewGroup parent) {
+		Log.d(TAG, "position: " + position + ", getCount: " + getCount());
+		final TextView view = (TextView) super.getView(position, convertView, parent);
+		if (position == getCount()) {
+			((TextView) view.findViewById(android.R.id.text1)).setText("");
+			((TextView) view.findViewById(android.R.id.text1)).setHint(hintResource);
+		} else {
+			setDropDownViewText(position, view);
+		}
+		return view;
+	}
+
+	@Override
+	public int getCount() {
 		int count = super.getCount();
 		if (hintEnabled) {
 			return count > 0 ? count - 1 : count;
@@ -82,18 +82,18 @@ public abstract class HintAdapter extends ArrayAdapter {
 		}
 	}
 
-    // This is the funny method. Every time we update the adapter data, the hint gets removed, so
-    // we need to add it again
-    public void updateData(List data) {
-        clear();
-        if (data != null) {
-            addAll(data);
-            if (isHintEnabled()) {
-                addHintObject();
-            }
-        }
-        notifyDataSetChanged();
-    }
+	// This is the funny method. Every time we update the adapter data, the hint gets removed, so
+	// we need to add it again
+	public void updateData(List data) {
+		clear();
+		if (data != null) {
+			addAll(data);
+			if (isHintEnabled()) {
+				addHintObject();
+			}
+		}
+		notifyDataSetChanged();
+	}
 
 	public boolean isHintEnabled() {
 		return hintEnabled;

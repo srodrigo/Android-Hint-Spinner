@@ -18,54 +18,52 @@ import android.widget.Spinner;
  * the On Item Selected events.
  */
 public class HintSpinner<T> extends Spinner {
-    private static final String TAG = HintSpinner.class.getSimpleName();
+	private static final String TAG = HintSpinner.class.getSimpleName();
+	private HintAdapter adapter;
+	private Callback<T> callback;
 
-    public interface Callback<T> {
-        void onItemSelected(int position, T itemAtPosition);
-    }
+	public HintSpinner(Context context, AttributeSet attrs) {
+		super(context, attrs);
+	}
 
-    private HintAdapter adapter;
+	public void initAdapter(HintAdapter adapter) {
+		this.adapter = adapter;
+		setAdapter(adapter);
+		selectHint();
+		setOnItemSelectedListener(new OnItemSelectedListener() {
+			@Override
+			public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+				Log.d(TAG, "position selected: " + position);
+				if (HintSpinner.this.callback == null) {
+					throw new IllegalStateException("callback cannot be null");
+				}
+				if (!isHintPosition(position)) {
+					HintSpinner.this.callback.onItemSelected(position, (T) getItemAtPosition(position));
+				}
+			}
 
-    private Callback<T> callback;
+			@Override
+			public void onNothingSelected(AdapterView<?> parent) {
+				Log.d(TAG, "Nothing selected");
+			}
+		});
+	}
 
-    public HintSpinner(Context context, AttributeSet attrs) {
-        super(context, attrs);
-    }
+	private boolean isHintPosition(int position) {
+		return adapter.isHintEnabled() && position == adapter.getHintPosition();
+	}
 
-    public void initAdapter(HintAdapter adapter) {
-        this.adapter = adapter;
-        setAdapter(adapter);
-        selectHint();
-        setOnItemSelectedListener(new OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                Log.d(TAG, "position selected: " + position);
-                if (HintSpinner.this.callback == null) {
-                    throw new IllegalStateException("callback cannot be null");
-                }
-                if (!isHintPosition(position)) {
-                    HintSpinner.this.callback.onItemSelected(position, (T) getItemAtPosition(position));
-                }
-            }
+	public void selectHint() {
+		adapter.addHint();
+		setSelection(adapter.getHintPosition());
+	}
 
-            @Override
-            public void onNothingSelected(AdapterView<?> parent) {
-                Log.d(TAG, "Nothing selected");
-            }
-        });
-    }
+	public void setCallback(Callback<T> callback) {
+		this.callback = callback;
+	}
 
-    private boolean isHintPosition(int position) {
-        return adapter.isHintEnabled() && position == adapter.getHintPosition();
-    }
-
-    public void selectHint() {
-        adapter.addHint();
-        setSelection(adapter.getHintPosition());
-    }
-
-    public void setCallback(Callback<T> callback) {
-        this.callback = callback;
-    }
+	public interface Callback<T> {
+		void onItemSelected(int position, T itemAtPosition);
+	}
 }
 
