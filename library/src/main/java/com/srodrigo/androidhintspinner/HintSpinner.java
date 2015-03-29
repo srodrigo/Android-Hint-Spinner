@@ -82,7 +82,6 @@ public class HintSpinner<T> extends Spinner {
 	 * Selects the hint element.
 	 */
 	public void selectHint() {
-		adapter.addHint();
 		setSelection(adapter.getHintPosition());
 	}
 

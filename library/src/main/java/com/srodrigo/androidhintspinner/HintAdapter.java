@@ -30,8 +30,8 @@ public abstract class HintAdapter extends ArrayAdapter {
 		this(context, context.getString(hintResource), data);
 	}
 
-	public HintAdapter(Context context, String hintResource, List data) {
-		this(context, android.R.layout.simple_spinner_dropdown_item, hintResource, data);
+	public HintAdapter(Context context, String hint, List data) {
+		this(context, android.R.layout.simple_spinner_dropdown_item, hint, data);
 	}
 
 	protected HintAdapter(Context context, int layoutResource, String hintResource, List data) {
@@ -39,6 +39,16 @@ public abstract class HintAdapter extends ArrayAdapter {
 		// or crashing when the user sets an unmodifiable.
 		super(context, layoutResource, new ArrayList(data));
 		this.hintResource = hintResource;
+		addHint();
+	}
+
+	private void addHint() {
+		// Prevent adding the hint more than once
+		if (!hintAdded) {
+			Log.d(TAG, "Adding hint object");
+			add(new Object());
+			hintAdded = true;
+		}
 	}
 
 	/**
@@ -56,18 +66,6 @@ public abstract class HintAdapter extends ArrayAdapter {
 			addHint();
 		}
 		notifyDataSetChanged();
-	}
-
-	/**
-	 * Adds the hint element.
-	 */
-	public void addHint() {
-		// Prevent adding the hint more than once
-		if (!hintAdded) {
-			Log.d(TAG, "Adding hint object");
-			add(new Object());
-			hintAdded = true;
-		}
 	}
 
 	@Override
@@ -101,7 +99,7 @@ public abstract class HintAdapter extends ArrayAdapter {
 	/**
 	 * Returns the elements count without the hint element.
 	 *
-	 * @return
+	 * @return The number of elements
 	 */
 	@Override
 	public int getCount() {
