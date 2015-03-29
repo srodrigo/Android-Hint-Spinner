@@ -8,7 +8,6 @@ package com.srodrigo.androidhintspinner;
 
 import android.content.Context;
 import android.util.AttributeSet;
-import android.widget.TextView;
 
 import java.util.List;
 
@@ -21,19 +20,6 @@ public class TestHintSpinner extends HintSpinner<User> {
 	}
 
 	public void initAdapter(List<User> items) {
-		super.initAdapter(new HintAdapter(
-				getContext(),
-				HINT_TEXT,
-				items) {
-
-			@Override
-			protected void setDropDownViewText(int position, TextView dropDownView) {
-				final User user = (User) getItem(position);
-				String name = user.getName();
-				String lastName = user.getLastName();
-				final String text = String.format("%s %s", name, lastName);
-				dropDownView.setText(text);
-			}
-		});
+		super.initAdapter(new HintAdapter(getContext(), HINT_TEXT, items));
 	}
 }

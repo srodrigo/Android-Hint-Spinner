@@ -18,7 +18,7 @@ public class User {
 	private static Random random = new Random();
 
 	public static User generateRandom() {
-		int num = random.nextInt();
+		int num = Math.abs(random.nextInt());
 		return new User("Random user", String.valueOf(num));
 	}
 

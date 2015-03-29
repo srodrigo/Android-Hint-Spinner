@@ -8,6 +8,7 @@ package com.srodrigo.androidhintspinner;
 
 import android.content.Context;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
@@ -20,25 +21,34 @@ import java.util.List;
  * Allows adding a hint at the end of the list. It will show the hint when adding it and selecting
  * the last object. Otherwise, it will show the dropdown view implemented by the concrete class.
  */
-public abstract class HintAdapter extends ArrayAdapter {
+public class HintAdapter extends ArrayAdapter {
 	private static final String TAG = HintAdapter.class.getSimpleName();
+
+	private static final int DEFAULT_LAYOUT_RESOURCE = android.R.layout.simple_spinner_dropdown_item;
 
 	private boolean hintAdded;
 	private String hintResource;
 
+	private final LayoutInflater layoutInflater;
+
 	public HintAdapter(Context context, int hintResource, List data) {
-		this(context, context.getString(hintResource), data);
+		this(context, DEFAULT_LAYOUT_RESOURCE, context.getString(hintResource), data);
 	}
 
 	public HintAdapter(Context context, String hint, List data) {
-		this(context, android.R.layout.simple_spinner_dropdown_item, hint, data);
+		this(context, DEFAULT_LAYOUT_RESOURCE, hint, data);
 	}
 
-	protected HintAdapter(Context context, int layoutResource, String hintResource, List data) {
+	public HintAdapter(Context context, int layoutResource, int hintResource, List data) {
+		this(context, layoutResource, context.getString(hintResource), data);
+	}
+
+	public HintAdapter(Context context, int layoutResource, String hintResource, List data) {
 		// Create a copy, as we need to be able to add the hint without modifying the array passed in
 		// or crashing when the user sets an unmodifiable.
 		super(context, layoutResource, new ArrayList(data));
 		this.hintResource = hintResource;
+		this.layoutInflater = (LayoutInflater)context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 		addHint();
 	}
 
@@ -70,29 +80,42 @@ public abstract class HintAdapter extends ArrayAdapter {
 
 	@Override
 	public View getDropDownView(int position, View convertView, ViewGroup parent) {
-		final TextView dropDownView = (TextView) super.getDropDownView(position, convertView, parent);
-		setDropDownViewText(position, dropDownView);
-		return dropDownView;
+		return getCustomView(position, convertView, parent);
 	}
 
 	/**
-	 * Hook method to set a custom text value.
+	 * Hook method to set a custom view.
+	 *
+	 * Provides a default implementation using the simple spinner dropdown item.
 	 *
 	 * @param position Position selected
-	 * @param dropDownView Text View
+	 * @param convertView View
+	 * @param parent Parent view group
 	 */
-	protected abstract void setDropDownViewText(int position, TextView dropDownView);
+	protected View getCustomView(int position, View convertView, ViewGroup parent) {
+		return inflateDefaultLayout(parent);
+	}
+
+	private View inflateDefaultLayout(ViewGroup parent) {
+		return getLayoutInflater().inflate(DEFAULT_LAYOUT_RESOURCE, parent, false);
+	}
 
 	@Override
 	public View getView(int position, View convertView, ViewGroup parent) {
 		Log.d(TAG, "position: " + position + ", getCount: " + getCount());
-		final TextView view = (TextView) super.getView(position, convertView, parent);
+		View view;
 		if (position == getCount()) {
-			((TextView) view.findViewById(android.R.id.text1)).setText("");
-			((TextView) view.findViewById(android.R.id.text1)).setHint(hintResource);
+			view = getDefaultView(parent);
 		} else {
-			setDropDownViewText(position, view);
+			view = getCustomView(position, convertView, parent);
 		}
+		return view;
+	}
+
+	private View getDefaultView(ViewGroup parent) {
+		View view = inflateDefaultLayout(parent);
+		((TextView) view.findViewById(android.R.id.text1)).setText("");
+		((TextView) view.findViewById(android.R.id.text1)).setHint(hintResource);
 		return view;
 	}
 
@@ -118,5 +141,9 @@ public abstract class HintAdapter extends ArrayAdapter {
 	 */
 	public int getHintPosition() {
 		return getCount();
+	}
+
+	protected LayoutInflater getLayoutInflater() {
+		return layoutInflater;
 	}
 }

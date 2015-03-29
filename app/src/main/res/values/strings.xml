@@ -2,6 +2,5 @@
     <string name="app_name">Android Hint Spinner Sample</string>
 
     <string name="user_spinner_hint">Please select a User</string>
-    <string name="user_spinner_text" formatted="false">%s %s</string>
     <string name="add_more_button">Add more</string>
 </resources>
