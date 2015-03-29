@@ -1,3 +1,9 @@
+/*
+ * Copyright (c) 2015 Sergio Rodrigo
+ *
+ * This software may be modified and distributed under the terms
+ * of the MIT license. See the LICENSE file for details.
+ */
 package com.srodrigo.androidhintspinner;
 
 import android.content.Context;
@@ -8,10 +14,10 @@ import android.widget.AdapterView;
 import android.widget.Spinner;
 
 /**
- * Created by srodrigo on 27/3/15.
+ * Provides methods to work with a hint element. The method setCallback must be called to manage
+ * the On Item Selected events.
  */
 public class HintSpinner<T> extends Spinner {
-
     private static final String TAG = HintSpinner.class.getSimpleName();
 
     public interface Callback<T> {
@@ -26,13 +32,14 @@ public class HintSpinner<T> extends Spinner {
         super(context, attrs);
     }
 
-    // TODO: Remove callback
     public void initAdapter(HintAdapter adapter) {
         this.adapter = adapter;
         setAdapter(adapter);
+        selectHint();
         setOnItemSelectedListener(new OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                Log.d(TAG, "position selected: " + position);
                 if (HintSpinner.this.callback == null) {
                     throw new IllegalStateException("callback cannot be null");
                 }
@@ -49,10 +56,7 @@ public class HintSpinner<T> extends Spinner {
     }
 
     private boolean isHintPosition(int position) {
-        if (adapter.isHintEnabled()) {
-            return position == adapter.getHintPosition();
-        }
-        return false;
+        return adapter.isHintEnabled() && position == adapter.getHintPosition();
     }
 
     public void selectHint() {
