@@ -13,6 +13,22 @@ buildscript {
 }
 
 allprojects {
+    ext {
+        // Android config
+        androidBuildToolsVersion = '22.0.1'
+        androidMinSdkVersion = 14
+        androidTargetSdkVersion = 22
+        androidCompileSdkVersion = 22
+        androidVersionCode = 1
+        androidVersionName = '1.0-SNAPSHOT'
+
+        // Libraries
+        libAppcompat = 'com.android.support:appcompat-v7:22.0.0'
+        libJunit = 'junit:junit:4.12'
+        libRobolectric = 'org.robolectric:robolectric:2.4'
+        libMockito = 'org.mockito:mockito-core:1.10.19'
+    }
+
     repositories {
         jcenter()
     }
