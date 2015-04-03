@@ -69,7 +69,6 @@ public class MainActivity extends ActionBarActivity {
 			public void onClick(View view) {
 				String randomValue = String.format(VALUE_STRING, Util.generateRandomPositive());
 				defaults.add(randomValue);
-				defaultHintSpinner.updateData(defaults);
 				defaultHintSpinner.selectHint();
 			}
 		});
@@ -121,7 +120,6 @@ public class MainActivity extends ActionBarActivity {
 			@Override
 			public void onClick(View view) {
 				users.add(User.generateRandom());
-				userHintSpinner.updateData(users);
 				userHintSpinner.selectHint();
 			}
 		});

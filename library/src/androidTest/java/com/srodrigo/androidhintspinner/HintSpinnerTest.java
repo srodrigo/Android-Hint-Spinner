@@ -25,6 +25,7 @@ public class HintSpinnerTest {
 
 	public static final String HINT_TEXT = "Please select a user";
 
+	private HintAdapter hintAdapter;
 	private HintSpinner<User> testHintSpinner;
 	private Spinner spinner;
 
@@ -47,60 +48,58 @@ public class HintSpinnerTest {
 	                                            List<User> items,
 	                                            HintSpinner.Callback<User> callback) {
 		spinner = new Spinner(context, null);
+		hintAdapter = new HintAdapter(context, HINT_TEXT, items);
 		return new HintSpinner<>(
 				spinner,
-				new HintAdapter(context, HINT_TEXT, items),
+				hintAdapter,
 				callback);
 	}
 
 	@Test
 	public void testSpinnerSetsAdapterElements() throws Exception {
+		List<User> users = initHintSpinnerWithUsers();
+
+		Assert.assertEquals(users.size(), hintAdapter.getCount());
+	}
+
+	private List<User> initHintSpinnerWithUsers() {
 		List<User> users = createUserList();
 		testHintSpinner = createHintSpinner(Robolectric.application, users, emptyCallback);
 		testHintSpinner.init();
-
-		Assert.assertEquals(users.size(), spinner.getCount());
+		return users;
 	}
 
 	@Test
 	public void testSelectHintSelectsLastPosition() throws Exception {
-		List<User> users = createUserList();
-		testHintSpinner = createHintSpinner(Robolectric.application, users, emptyCallback);
+		initHintSpinnerWithUsers();
 
 		testHintSpinner.selectHint();
 
-		Assert.assertEquals(users.size(), spinner.getSelectedItemPosition());
+		Assert.assertEquals(hintAdapter.getHintPosition(), spinner.getSelectedItemPosition());
 	}
 
 	@Test
 	public void testAddNewElementsUpdatesElements() throws Exception {
-		List<User> users = createUserList();
-		testHintSpinner = createHintSpinner(Robolectric.application, users, emptyCallback);
+		List<User> users = initHintSpinnerWithUsers();
 
-		List<User> newUsers = new ArrayList<>(users);
-		newUsers.add(new User("new user", "lastname"));
-		testHintSpinner.updateData(newUsers);
+		users.add(new User("new user", "lastname"));
 
-		Assert.assertEquals(newUsers.size(), spinner.getCount());
+		Assert.assertEquals(users.size(), hintAdapter.getCount());
 	}
 
 	@Test
 	public void testAddNewElementsSelectHint() throws Exception {
-		List<User> users = createUserList();
-		testHintSpinner = createHintSpinner(Robolectric.application, users, emptyCallback);
+		List<User> users = initHintSpinnerWithUsers();
 
-		List<User> newUsers = new ArrayList<>(users);
-		newUsers.add(new User("new user", "lastname"));
-		testHintSpinner.updateData(newUsers);
+		users.add(new User("new user", "lastname"));
 		testHintSpinner.selectHint();
 
-		Assert.assertEquals(newUsers.size(), spinner.getSelectedItemPosition());
+		Assert.assertEquals(hintAdapter.getHintPosition(), spinner.getSelectedItemPosition());
 	}
 
 	@Test
 	public void testSelectElement() throws Exception {
-		List<User> users = createUserList();
-		testHintSpinner = createHintSpinner(Robolectric.application, users, emptyCallback);
+		initHintSpinnerWithUsers();
 
 		int selectedPosition = 1;
 		spinner.setSelection(selectedPosition);
@@ -110,13 +109,12 @@ public class HintSpinnerTest {
 
 	@Test
 	public void testSelectHintAfterSelectingElement() throws Exception {
-		List<User> users = createUserList();
-		testHintSpinner = createHintSpinner(Robolectric.application, users, emptyCallback);
+		initHintSpinnerWithUsers();
 
 		spinner.setSelection(1);
 		testHintSpinner.selectHint();
 
-		Assert.assertEquals(users.size(), spinner.getSelectedItemPosition());
+		Assert.assertEquals(hintAdapter.getHintPosition(), spinner.getSelectedItemPosition());
 	}
 
 }

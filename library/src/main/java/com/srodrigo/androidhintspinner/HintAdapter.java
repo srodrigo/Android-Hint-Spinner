@@ -14,70 +14,41 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**
  * Allows adding a hint at the end of the list. It will show the hint when adding it and selecting
  * the last object. Otherwise, it will show the dropdown view implemented by the concrete class.
  */
-public class HintAdapter extends ArrayAdapter {
+public class HintAdapter<T> extends ArrayAdapter<T> {
 	private static final String TAG = HintAdapter.class.getSimpleName();
 
 	private static final int DEFAULT_LAYOUT_RESOURCE = android.R.layout.simple_spinner_dropdown_item;
 
-	private boolean hintAdded;
 	private int layoutResource;
 	private String hintResource;
 
 	private final LayoutInflater layoutInflater;
 
-	public HintAdapter(Context context, int hintResource, List data) {
+	public HintAdapter(Context context, int hintResource, List<T> data) {
 		this(context, DEFAULT_LAYOUT_RESOURCE, context.getString(hintResource), data);
 	}
 
-	public HintAdapter(Context context, String hint, List data) {
+	public HintAdapter(Context context, String hint, List<T> data) {
 		this(context, DEFAULT_LAYOUT_RESOURCE, hint, data);
 	}
 
-	public HintAdapter(Context context, int layoutResource, int hintResource, List data) {
+	public HintAdapter(Context context, int layoutResource, int hintResource, List<T> data) {
 		this(context, layoutResource, context.getString(hintResource), data);
 	}
 
-	public HintAdapter(Context context, int layoutResource, String hintResource, List data) {
+	public HintAdapter(Context context, int layoutResource, String hintResource, List<T> data) {
 		// Create a copy, as we need to be able to add the hint without modifying the array passed in
 		// or crashing when the user sets an unmodifiable.
-		super(context, layoutResource, new ArrayList(data));
+		super(context, layoutResource, data);
 		this.layoutResource = layoutResource;
 		this.hintResource = hintResource;
 		this.layoutInflater = LayoutInflater.from(context);
-		addHint();
-	}
-
-	private void addHint() {
-		// Prevent adding the hint more than once
-		if (!hintAdded) {
-			Log.d(TAG, "Adding hint object");
-			add(new Object());
-			hintAdded = true;
-		}
-	}
-
-	/**
-	 * This needs to be called to update the adapter data.
-	 *
-	 * @param data List of elements
-	 */
-	public void updateData(List data) {
-		clear();
-		hintAdded = false;
-		if (data != null) {
-			addAll(data);
-			// Every time we update the adapter data, the hint gets removed, so  we need to add it
-			// again.
-			addHint();
-		}
-		notifyDataSetChanged();
 	}
 
 	@Override
@@ -119,7 +90,7 @@ public class HintAdapter extends ArrayAdapter {
 	public View getView(int position, View convertView, ViewGroup parent) {
 		Log.d(TAG, "position: " + position + ", getCount: " + getCount());
 		View view;
-		if (position == getCount()) {
+		if (position == getHintPosition()) {
 			view = getDefaultView(parent);
 		} else {
 			view = getCustomView(position, convertView, parent);
@@ -136,22 +107,12 @@ public class HintAdapter extends ArrayAdapter {
 	}
 
 	/**
-	 * Returns the elements count without the hint element.
+	 * Gets the position of the hint.
 	 *
-	 * @return The number of elements
-	 */
-	@Override
-	public int getCount() {
-		int count = super.getCount();
-		return count > 0 ? count - 1 : count;
-	}
-
-	/**
-	 * Gets the position of the hint element. The hint gets added at the end of the list.
-	 *
-	 * @return Position of the hint element
+	 * @return Position of the hint
 	 */
 	public int getHintPosition() {
-		return getCount();
+		int count = getCount();
+		return count > 0 ? count + 1 : count;
 	}
 }

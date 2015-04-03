@@ -11,8 +11,6 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Spinner;
 
-import java.util.List;
-
 /**
  * Provides methods to work with a hint element.
  */
@@ -81,16 +79,6 @@ public class HintSpinner<T> {
 	 */
 	public void selectHint() {
 		spinner.setSelection(adapter.getHintPosition());
-	}
-
-	/**
-	 * Updates the spinner data with the data provided.
-	 *
-	 * @param newData Data used to update the spinner
-	 */
-	public void updateData(List<T> newData) {
-		adapter.updateData(newData);
-		spinner.setAdapter(adapter);
 	}
 }
 
