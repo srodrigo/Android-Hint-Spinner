@@ -27,6 +27,7 @@ public class HintAdapter extends ArrayAdapter {
 	private static final int DEFAULT_LAYOUT_RESOURCE = android.R.layout.simple_spinner_dropdown_item;
 
 	private boolean hintAdded;
+	private int layoutResource;
 	private String hintResource;
 
 	private final LayoutInflater layoutInflater;
@@ -47,8 +48,9 @@ public class HintAdapter extends ArrayAdapter {
 		// Create a copy, as we need to be able to add the hint without modifying the array passed in
 		// or crashing when the user sets an unmodifiable.
 		super(context, layoutResource, new ArrayList(data));
+		this.layoutResource = layoutResource;
 		this.hintResource = hintResource;
-		this.layoutInflater = (LayoutInflater)context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+		this.layoutInflater = LayoutInflater.from(context);
 		addHint();
 	}
 
@@ -102,7 +104,15 @@ public class HintAdapter extends ArrayAdapter {
 	}
 
 	private View inflateDefaultLayout(ViewGroup parent) {
-		return getLayoutInflater().inflate(DEFAULT_LAYOUT_RESOURCE, parent, false);
+		return inflateLayout(DEFAULT_LAYOUT_RESOURCE, parent, false);
+	}
+
+	private View inflateLayout(int resource, android.view.ViewGroup root, boolean attachToRoot) {
+		return layoutInflater.inflate(resource, root, attachToRoot);
+	}
+
+	public View inflateLayout(android.view.ViewGroup root, boolean attachToRoot) {
+		return layoutInflater.inflate(layoutResource, root, attachToRoot);
 	}
 
 	@Override
@@ -133,11 +143,7 @@ public class HintAdapter extends ArrayAdapter {
 	@Override
 	public int getCount() {
 		int count = super.getCount();
-		if (hintAdded) {
-			return count > 0 ? count - 1 : count;
-		} else {
-			return count;
-		}
+		return count > 0 ? count - 1 : count;
 	}
 
 	/**
@@ -147,9 +153,5 @@ public class HintAdapter extends ArrayAdapter {
 	 */
 	public int getHintPosition() {
 		return getCount();
-	}
-
-	protected LayoutInflater getLayoutInflater() {
-		return layoutInflater;
 	}
 }

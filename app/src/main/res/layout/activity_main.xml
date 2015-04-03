@@ -20,8 +20,8 @@
             style="@style/TitleTextView"
             android:text="@string/default_spinner_title"/>
 
-        <com.srodrigo.androidhintspinner.HintSpinner
-            android:id="@+id/default_hint_spinner"
+        <Spinner
+            android:id="@+id/default_spinner"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/default_margin"/>
@@ -55,8 +55,8 @@
             style="@style/TitleTextView"
             android:text="@string/custom_spinner_title"/>
 
-        <com.srodrigo.androidhintspinnersample.UserHintSpinner
-            android:id="@+id/user_hint_spinner"
+        <Spinner
+            android:id="@+id/user_spinner"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/default_margin"/>
