@@ -40,16 +40,24 @@ public class HintSpinner<T> extends Spinner {
 	private HintAdapter adapter;
 	private Callback<T> callback;
 
+	public HintSpinner(Context context) {
+		super(context);
+	}
+
 	public HintSpinner(Context context, AttributeSet attrs) {
 		super(context, attrs);
 	}
 
+	public HintSpinner(Context context, AttributeSet attrs, int defStyleAttr) {
+		super(context, attrs, defStyleAttr);
+	}
+
 	/**
-	 * Initializes the spinner.
+	 * Initializes the spinner adapter.
 	 *
 	 * By default, the hint is selected when calling this method.
 	 *
-	 * @param adapter
+	 * @param adapter The hint adapter
 	 */
 	public void initAdapter(HintAdapter adapter) {
 		this.adapter = adapter;
@@ -63,7 +71,8 @@ public class HintSpinner<T> extends Spinner {
 					throw new IllegalStateException("callback cannot be null");
 				}
 				if (!isHintPosition(position)) {
-					HintSpinner.this.callback.onItemSelected(position, (T) getItemAtPosition(position));
+					Object item = getItemAtPosition(position);
+					HintSpinner.this.callback.onItemSelected(position, (T) item);
 				}
 			}
 

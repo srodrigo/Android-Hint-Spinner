@@ -15,10 +15,8 @@ public class User {
 	private String name;
 	private String lastName;
 
-	private static Random random = new Random();
-
 	public static User generateRandom() {
-		int num = Math.abs(random.nextInt());
+		int num = Util.generateRandomPositive();
 		return new User("Random user", String.valueOf(num));
 	}
 

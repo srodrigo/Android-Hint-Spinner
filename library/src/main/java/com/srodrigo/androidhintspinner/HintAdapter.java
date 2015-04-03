@@ -93,7 +93,12 @@ public class HintAdapter extends ArrayAdapter {
 	 * @param parent Parent view group
 	 */
 	protected View getCustomView(int position, View convertView, ViewGroup parent) {
-		return inflateDefaultLayout(parent);
+		View view = inflateDefaultLayout(parent);
+		Object item = getItem(position);
+		TextView textView = (TextView) view.findViewById(android.R.id.text1);
+		textView.setText(item.toString());
+		textView.setHint("");
+		return view;
 	}
 
 	private View inflateDefaultLayout(ViewGroup parent) {
@@ -114,8 +119,9 @@ public class HintAdapter extends ArrayAdapter {
 
 	private View getDefaultView(ViewGroup parent) {
 		View view = inflateDefaultLayout(parent);
-		((TextView) view.findViewById(android.R.id.text1)).setText("");
-		((TextView) view.findViewById(android.R.id.text1)).setHint(hintResource);
+		TextView textView = (TextView) view.findViewById(android.R.id.text1);
+		textView.setText("");
+		textView.setHint(hintResource);
 		return view;
 	}
 

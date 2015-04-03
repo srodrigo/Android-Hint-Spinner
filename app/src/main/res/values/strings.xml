@@ -1,6 +1,11 @@
 <resources>
     <string name="app_name">Android Hint Spinner Sample</string>
 
+    <string name="default_spinner_title">Hint Spinner using default layout</string>
+    <string name="default_spinner_hint">Please select a value</string>
+    <string name="add_new_value_button">Add value</string>
+
+    <string name="custom_spinner_title">Hint Spinner using custom layout</string>
     <string name="user_spinner_hint">Please select a User</string>
-    <string name="add_more_button">Add more</string>
+    <string name="add_new_user_button">Add user</string>
 </resources>
