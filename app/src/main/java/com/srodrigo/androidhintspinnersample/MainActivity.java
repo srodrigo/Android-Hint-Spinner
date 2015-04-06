@@ -55,7 +55,7 @@ public class MainActivity extends ActionBarActivity {
 
 		defaultHintSpinner = new HintSpinner<>(
 				defaultSpinner,
-				new HintAdapter(this, R.string.default_spinner_hint, defaults),
+				new HintAdapter<>(this, R.string.default_spinner_hint, defaults),
 				new HintSpinner.Callback<String>() {
 					@Override
 					public void onItemSelected(int position, String itemAtPosition) {
@@ -86,7 +86,7 @@ public class MainActivity extends ActionBarActivity {
 
 		userHintSpinner = new HintSpinner<>(
 				userSpinner,
-				new HintAdapter(
+				new HintAdapter<User>(
 						this,
 						R.layout.row_user_spinner,
 						R.string.user_spinner_hint,
@@ -94,7 +94,7 @@ public class MainActivity extends ActionBarActivity {
 
 					@Override
 					protected View getCustomView(int position, View convertView, ViewGroup parent) {
-						final User user = (User) getItem(position);
+						final User user = getItem(position);
 						final String name = user.getName();
 						final String lastName = user.getLastName();
 
