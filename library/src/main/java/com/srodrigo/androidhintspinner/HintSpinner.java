@@ -6,20 +6,15 @@
  */
 package com.srodrigo.androidhintspinner;
 
-import android.content.Context;
-import android.util.AttributeSet;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Spinner;
 
-import java.util.List;
-
 /**
- * Provides methods to work with a hint element. The method setCallback must be called to manage
- * the On Item Selected events.
+ * Provides methods to work with a hint element.
  */
-public class HintSpinner<T> extends Spinner {
+public class HintSpinner<T> {
 	private static final String TAG = HintSpinner.class.getSimpleName();
 
 	/**
@@ -37,33 +32,24 @@ public class HintSpinner<T> extends Spinner {
 		void onItemSelected(int position, T itemAtPosition);
 	}
 
-	private HintAdapter adapter;
-	private Callback<T> callback;
+	private final Spinner spinner;
+	private final HintAdapter adapter;
+	private final Callback<T> callback;
 
-	public HintSpinner(Context context) {
-		super(context);
-	}
-
-	public HintSpinner(Context context, AttributeSet attrs) {
-		super(context, attrs);
-	}
-
-	public HintSpinner(Context context, AttributeSet attrs, int defStyleAttr) {
-		super(context, attrs, defStyleAttr);
+	public HintSpinner(Spinner spinner, HintAdapter adapter, Callback<T> callback) {
+		this.spinner = spinner;
+		this.adapter = adapter;
+		this.callback = callback;
 	}
 
 	/**
-	 * Initializes the spinner adapter.
+	 * Initializes the hint spinner.
 	 *
 	 * By default, the hint is selected when calling this method.
-	 *
-	 * @param adapter The hint adapter
 	 */
-	public void initAdapter(HintAdapter adapter) {
-		this.adapter = adapter;
-		setAdapter(adapter);
-		selectHint();
-		setOnItemSelectedListener(new OnItemSelectedListener() {
+	public void init() {
+		spinner.setAdapter(adapter);
+		spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
 			@Override
 			public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
 				Log.d(TAG, "position selected: " + position);
@@ -71,7 +57,7 @@ public class HintSpinner<T> extends Spinner {
 					throw new IllegalStateException("callback cannot be null");
 				}
 				if (!isHintPosition(position)) {
-					Object item = getItemAtPosition(position);
+					Object item = HintSpinner.this.spinner.getItemAtPosition(position);
 					HintSpinner.this.callback.onItemSelected(position, (T) item);
 				}
 			}
@@ -81,6 +67,7 @@ public class HintSpinner<T> extends Spinner {
 				Log.d(TAG, "Nothing selected");
 			}
 		});
+		selectHint();
 	}
 
 	private boolean isHintPosition(int position) {
@@ -91,21 +78,7 @@ public class HintSpinner<T> extends Spinner {
 	 * Selects the hint element.
 	 */
 	public void selectHint() {
-		setSelection(adapter.getHintPosition());
-	}
-
-	/**
-	 * Updates the spinner data with the data provided.
-	 *
-	 * @param newData Data used to update the spinner
-	 */
-	public void updateData(List<T> newData) {
-		adapter.updateData(newData);
-		setAdapter(adapter);
-	}
-
-	public void setCallback(Callback<T> callback) {
-		this.callback = callback;
+		spinner.setSelection(adapter.getHintPosition());
 	}
 }
 

@@ -22,8 +22,11 @@ public class HintAdapterTest {
 
 	public static final String HINT_TEXT = "hint text";
 
+	private List<User> users;
+
 	private HintAdapter createEmptyTestHintAdapter() {
-		return createTestHintAdapter(new ArrayList<User>());
+		users = new ArrayList<>();
+		return createTestHintAdapter(users);
 	}
 
 	private HintAdapter createTestHintAdapter(List<User> users) {
@@ -61,12 +64,12 @@ public class HintAdapterTest {
 	}
 
 	@Test
-	public void testNonEmptyAdapterShouldContainHintAtLastPosition() throws Exception {
+	public void testNonEmptyAdapterShouldContainHintAtLastPositionPlusOne() throws Exception {
 		List<User> userList = createUserList();
 		HintAdapter testHintAdapter = createTestHintAdapter(userList);
 
 		int hintPosition = testHintAdapter.getHintPosition();
-		Assert.assertEquals(userList.size(), hintPosition);
+		Assert.assertEquals(userList.size(), hintPosition - 1);
 	}
 
 	@Test
@@ -74,7 +77,7 @@ public class HintAdapterTest {
 		HintAdapter testHintAdapter = createEmptyTestHintAdapter();
 
 		List<User> userList = createUserList();
-		testHintAdapter.updateData(userList);
+		users.addAll(userList);
 
 		Assert.assertEquals(userList.size(), testHintAdapter.getCount());
 	}

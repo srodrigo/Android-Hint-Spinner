@@ -8,8 +8,12 @@ package com.srodrigo.androidhintspinnersample;
 
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
+import android.util.Log;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.Spinner;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.srodrigo.androidhintspinner.HintAdapter;
@@ -26,7 +30,7 @@ public class MainActivity extends ActionBarActivity {
 	private HintSpinner<String> defaultHintSpinner;
 	private List<String> defaults;
 
-	private UserHintSpinner userHintSpinner;
+	private HintSpinner<User> userHintSpinner;
 	private List<User> users;
 
 	@Override
@@ -42,21 +46,22 @@ public class MainActivity extends ActionBarActivity {
 	}
 
 	private void initDefaultHintSpinner() {
-		defaultHintSpinner = (HintSpinner<String>) findViewById(R.id.default_hint_spinner);
-
 		defaults = new ArrayList<>();
 		defaults.add(String.format(VALUE_STRING, 1));
 		defaults.add(String.format(VALUE_STRING, 2));
 		defaults.add(String.format(VALUE_STRING, 3));
 
-		HintAdapter defaultsAdapter = new HintAdapter(this, R.string.default_spinner_hint, defaults);
-		defaultHintSpinner.initAdapter(defaultsAdapter);
-		defaultHintSpinner.setCallback(new HintSpinner.Callback<String>() {
-			@Override
-			public void onItemSelected(int position, String itemAtPosition) {
-				showSelectedItem(itemAtPosition);
-			}
-		});
+		Spinner defaultSpinner = (Spinner) findViewById(R.id.default_spinner);
+
+		defaultHintSpinner = new HintSpinner<>(
+				defaultSpinner,
+				new HintAdapter<>(this, R.string.default_spinner_hint, defaults),
+				new HintSpinner.Callback<String>() {
+					@Override
+					public void onItemSelected(int position, String itemAtPosition) {
+						showSelectedItem(itemAtPosition);
+					}
+				});
 
 		Button addMoreButton = (Button) findViewById(R.id.add_new_value_button);
 		addMoreButton.setOnClickListener(new View.OnClickListener() {
@@ -64,34 +69,57 @@ public class MainActivity extends ActionBarActivity {
 			public void onClick(View view) {
 				String randomValue = String.format(VALUE_STRING, Util.generateRandomPositive());
 				defaults.add(randomValue);
-				defaultHintSpinner.updateData(defaults);
 				defaultHintSpinner.selectHint();
 			}
 		});
+		defaultHintSpinner.init();
+		Log.d("Count", "Count: " + defaultSpinner.getCount());
 	}
 
 	private void initUserHintSpinner() {
-		userHintSpinner = (UserHintSpinner) findViewById(R.id.user_hint_spinner);
-
 		users = new ArrayList<>();
 		users.add(new User("Albert", "Einstein"));
 		users.add(new User("Charles", "Darwin"));
 		users.add(new User("Isaac", "Newton"));
 
-		userHintSpinner.initAdapter(users);
-		userHintSpinner.setCallback(new HintSpinner.Callback<User>() {
-			@Override
-			public void onItemSelected(int position, User itemAtPosition) {
-				Toast.makeText(MainActivity.this, "Selected " + itemAtPosition, Toast.LENGTH_SHORT).show();
-			}
-		});
+		Spinner userSpinner = (Spinner) findViewById(R.id.user_spinner);
+
+		userHintSpinner = new HintSpinner<>(
+				userSpinner,
+				new HintAdapter<User>(
+						this,
+						R.layout.row_user_spinner,
+						R.string.user_spinner_hint,
+						users) {
+
+					@Override
+					protected View getCustomView(int position, View convertView, ViewGroup parent) {
+						final User user = getItem(position);
+						final String name = user.getName();
+						final String lastName = user.getLastName();
+
+						View view = inflateLayout(parent, false);
+						view.findViewById(R.id.user_image_view).setBackgroundResource(
+								R.drawable.ic_action_face_unlock);
+						((TextView) view.findViewById(R.id.user_name_text_view)).setText(name);
+						((TextView) view.findViewById(R.id.user_last_name_text_view)).setText(lastName);
+
+						return view;
+					}
+				},
+				new HintSpinner.Callback<User>() {
+					@Override
+					public void onItemSelected(int position, User itemAtPosition) {
+						Toast.makeText(MainActivity.this, "Selected " + itemAtPosition, Toast.LENGTH_SHORT).show();
+					}
+				});
+		userHintSpinner.init();
 
 		Button addMoreButton = (Button) findViewById(R.id.add_new_user_button);
 		addMoreButton.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View view) {
 				users.add(User.generateRandom());
-				userHintSpinner.updateData(users);
 				userHintSpinner.selectHint();
 			}
 		});
