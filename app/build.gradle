@@ -16,7 +16,7 @@ android {
     }
 
     defaultConfig {
-        applicationId "com.srodrigo.androidhintspinnersample"
+        applicationId "me.srodrigo.androidhintspinnersample"
         minSdkVersion parent.ext.androidMinSdkVersion
         targetSdkVersion parent.ext.androidTargetSdkVersion
         versionCode parent.ext.androidVersionCode

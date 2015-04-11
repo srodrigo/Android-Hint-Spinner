@@ -4,7 +4,7 @@
  * This software may be modified and distributed under the terms
  * of the MIT license. See the LICENSE file for details.
  */
-package com.srodrigo.androidhintspinnersample;
+package me.srodrigo.androidhintspinnersample;
 
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
@@ -16,8 +16,8 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.srodrigo.androidhintspinner.HintAdapter;
-import com.srodrigo.androidhintspinner.HintSpinner;
+import me.srodrigo.androidhintspinner.HintAdapter;
+import me.srodrigo.androidhintspinner.HintSpinner;
 
 import java.util.ArrayList;
 import java.util.List;
