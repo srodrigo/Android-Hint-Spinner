@@ -2,7 +2,24 @@
 
     <!-- Base application theme. -->
     <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
-        <!-- Customize your theme here. -->
+        <item name="android:spinnerStyle">@style/AppTheme.Spinner</item>
+        <item name="android:buttonStyle">@style/AppTheme.Button</item>
+    </style>
+
+    <style name="AppTheme.Spinner" parent="@android:style/Widget.Holo.Light.Spinner">
+        <item name="android:height">44dp</item>
+    </style>
+
+    <style name="AppTheme.Button" parent="@android:style/Widget.Holo.Light.Button">
+        <item name="android:background">@android:color/holo_blue_dark</item>
+        <item name="android:padding">8dp</item>
+    </style>
+
+    <style name="TitleTextView">
+        <item name="android:gravity">center</item>
+        <item name="android:textSize">20sp</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:textColor">#ff141414</item>
     </style>
 
 </resources>
