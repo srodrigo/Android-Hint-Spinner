@@ -2,7 +2,7 @@
 
 ## Sample App
 
-![](art/AndroidHintSpinner.gif)
+![](art/Android-Hint-Spinner.gif)
 
 A hint spinner that allows showing a hint, similar to the HTML Select &lt;option value="">Select your option&lt;/option>
 
