@@ -40,3 +40,5 @@ dependencies {
     }
     androidTestCompile parent.ext.libMockito
 }
+
+apply from: '../maven_push.gradle'

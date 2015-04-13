@@ -12,15 +12,22 @@ buildscript {
     }
 }
 
+def isReleaseBuild() {
+    return version.contains("SNAPSHOT") == false
+}
+
 allprojects {
+    version = VERSION_NAME
+    group = GROUP
+
     ext {
         // Android config
         androidBuildToolsVersion = '22.0.1'
         androidMinSdkVersion = 14
         androidTargetSdkVersion = 22
         androidCompileSdkVersion = 22
-        androidVersionCode = 1
-        androidVersionName = '1.0-SNAPSHOT'
+        androidVersionCode = VERSION_CODE.toInteger()
+        androidVersionName = VERSION_NAME
 
         // Libraries
         libAppcompat = 'com.android.support:appcompat-v7:22.0.0'

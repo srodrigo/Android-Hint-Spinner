@@ -8,7 +8,6 @@ package me.srodrigo.androidhintspinnersample;
 
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
-import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
@@ -16,11 +15,11 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import me.srodrigo.androidhintspinner.HintAdapter;
-import me.srodrigo.androidhintspinner.HintSpinner;
-
 import java.util.ArrayList;
 import java.util.List;
+
+import me.srodrigo.androidhintspinner.HintAdapter;
+import me.srodrigo.androidhintspinner.HintSpinner;
 
 
 public class MainActivity extends ActionBarActivity {
@@ -55,10 +54,14 @@ public class MainActivity extends ActionBarActivity {
 
 		defaultHintSpinner = new HintSpinner<>(
 				defaultSpinner,
+				// Default layout - You don't need to pass in any layout id, just your hint text and
+				// your list data
 				new HintAdapter<>(this, R.string.default_spinner_hint, defaults),
 				new HintSpinner.Callback<String>() {
 					@Override
 					public void onItemSelected(int position, String itemAtPosition) {
+						// Here you handle the on item selected event (this skips the hint selected
+						// event)
 						showSelectedItem(itemAtPosition);
 					}
 				});
@@ -73,7 +76,6 @@ public class MainActivity extends ActionBarActivity {
 			}
 		});
 		defaultHintSpinner.init();
-		Log.d("Count", "Count: " + defaultSpinner.getCount());
 	}
 
 	private void initUserHintSpinner() {
@@ -86,6 +88,8 @@ public class MainActivity extends ActionBarActivity {
 
 		userHintSpinner = new HintSpinner<>(
 				userSpinner,
+				// Custom layout - You can pass in a layout id and override the getCustomView method
+				// to set the value of your widgets
 				new HintAdapter<User>(
 						this,
 						R.layout.row_user_spinner,
@@ -98,6 +102,8 @@ public class MainActivity extends ActionBarActivity {
 						final String name = user.getName();
 						final String lastName = user.getLastName();
 
+						// You need to inflate the layout. It will use the layout id form the
+						// constructor
 						View view = inflateLayout(parent, false);
 						view.findViewById(R.id.user_image_view).setBackgroundResource(
 								R.drawable.ic_action_face_unlock);
@@ -110,6 +116,8 @@ public class MainActivity extends ActionBarActivity {
 				new HintSpinner.Callback<User>() {
 					@Override
 					public void onItemSelected(int position, User itemAtPosition) {
+						// Here you handle the on item selected event (this skips the hint selected
+						// event)
 						Toast.makeText(MainActivity.this, "Selected " + itemAtPosition, Toast.LENGTH_SHORT).show();
 					}
 				});

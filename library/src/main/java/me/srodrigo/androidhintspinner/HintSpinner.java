@@ -33,10 +33,10 @@ public class HintSpinner<T> {
 	}
 
 	private final Spinner spinner;
-	private final HintAdapter adapter;
+	private final HintAdapter<T> adapter;
 	private final Callback<T> callback;
 
-	public HintSpinner(Spinner spinner, HintAdapter adapter, Callback<T> callback) {
+	public HintSpinner(Spinner spinner, HintAdapter<T> adapter, Callback<T> callback) {
 		this.spinner = spinner;
 		this.adapter = adapter;
 		this.callback = callback;
