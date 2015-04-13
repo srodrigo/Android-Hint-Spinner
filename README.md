@@ -1,6 +1,7 @@
 # Android Hint Spinner
 
 ## Sample App
+![Maven Central](https://img.shields.io/maven-central/v/me.srodrigo/android-hint-spinner.svg)
 
 ![](art/Android-Hint-Spinner.gif)
 
