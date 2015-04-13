@@ -3,11 +3,11 @@
 ## Sample App
 ![Maven Central](https://img.shields.io/maven-central/v/me.srodrigo/android-hint-spinner.svg)
 
-![](art/Android-Hint-Spinner.gif)
-
 A hint spinner that allows showing a hint, similar to the HTML Select &lt;option value="">Select your option&lt;/option>
 
 You can use either a default or a custom layout.
+
+![](art/Android-Hint-Spinner.gif)
 
 ## Including the library
 Add this dependency to your build.gradle file:
