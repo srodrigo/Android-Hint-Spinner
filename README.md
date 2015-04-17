@@ -1,7 +1,7 @@
 # Android Hint Spinner
 
 ## Sample App
-![Maven Central](https://img.shields.io/maven-central/v/me.srodrigo/android-hint-spinner.svg)
+![Maven Central](https://img.shields.io/maven-central/v/me.srodrigo/androidhintspinner.svg)
 
 A hint spinner that allows showing a hint, similar to the HTML Select &lt;option value="">Select your option&lt;/option>
 
