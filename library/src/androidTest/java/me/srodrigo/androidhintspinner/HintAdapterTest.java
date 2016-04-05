@@ -29,8 +29,8 @@ public class HintAdapterTest {
 		return createTestHintAdapter(users);
 	}
 
-	private HintAdapter createTestHintAdapter(List<User> users) {
-		return new HintAdapter(Robolectric.application, HINT_TEXT, users);
+	private HintAdapter<User> createTestHintAdapter(List<User> users) {
+		return new HintAdapter<>(Robolectric.application, HINT_TEXT, users);
 	}
 
 	private List<User> createUserList() {

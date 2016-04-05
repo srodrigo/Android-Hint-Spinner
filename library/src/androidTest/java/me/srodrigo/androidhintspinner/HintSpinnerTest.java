@@ -25,7 +25,7 @@ public class HintSpinnerTest {
 
 	public static final String HINT_TEXT = "Please select a user";
 
-	private HintAdapter hintAdapter;
+	private HintAdapter<User> hintAdapter;
 	private HintSpinner<User> testHintSpinner;
 	private Spinner spinner;
 
@@ -48,7 +48,7 @@ public class HintSpinnerTest {
 	                                            List<User> items,
 	                                            HintSpinner.Callback<User> callback) {
 		spinner = new Spinner(context, null);
-		hintAdapter = new HintAdapter(context, HINT_TEXT, items);
+		hintAdapter = new HintAdapter<>(context, HINT_TEXT, items);
 		return new HintSpinner<>(
 				spinner,
 				hintAdapter,
