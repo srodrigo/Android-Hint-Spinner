@@ -13,7 +13,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.TextView;
-
+import java.lang.ref.WeakReference;
 import java.util.List;
 
 /**
@@ -34,6 +34,7 @@ public class HintAdapter<T> extends ArrayAdapter<T> {
 		this(context, DEFAULT_LAYOUT_RESOURCE, context.getString(hintResource), data);
 	}
 
+	@Deprecated
 	public HintAdapter(Context context, String hint, List<T> data) {
 		this(context, DEFAULT_LAYOUT_RESOURCE, hint, data);
 	}
@@ -114,5 +115,25 @@ public class HintAdapter<T> extends ArrayAdapter<T> {
 	public int getHintPosition() {
 		int count = getCount();
 		return count > 0 ? count + 1 : count;
+	}
+
+	public static class Builder<T> {
+		private final WeakReference<Context> contextRef;
+		private final List<T> items;
+		private String hintText;
+
+		public Builder(Context context, List<T> items) {
+			this.items = items;
+			this.contextRef = new WeakReference<>(context);
+		}
+
+		public Builder<T> hintText(String hintText) {
+			this.hintText = hintText;
+			return this;
+		}
+
+		public HintAdapter<T> build() {
+			return new HintAdapter<>(contextRef.get(), hintText, items);
+		}
 	}
 }

@@ -30,7 +30,9 @@ public class HintAdapterTest {
 	}
 
 	private HintAdapter<User> createTestHintAdapter(List<User> users) {
-		return new HintAdapter<>(Robolectric.application, HINT_TEXT, users);
+		return new HintAdapter.Builder<>(Robolectric.application, users)
+			.hintText(HINT_TEXT)
+			.build();
 	}
 
 	private List<User> createUserList() {
